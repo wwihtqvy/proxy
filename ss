@@ -124,7 +124,7 @@ iptables-save
 
 #config network
 cat>/etc/network/interfaces<<EOF
-auto eth0: eth0:2 eth0:3 eth0:4 eth0:5 eth0:6 eth0:7 eth0:8 eth0:9
+auto eth0:1 eth0:2 eth0:3 eth0:4 eth0:5 eth0:6 eth0:7 eth0:8 eth0:9
 iface eth0:1 inet static
 address 10.1.0.5
 netmask 255.255.255.0
@@ -146,14 +146,11 @@ netmask 255.255.255.0
 iface eth0:7 inet static
 address 10.1.0.11
 netmask 255.255.255.0
-iface eth0:1 inet static
+iface eth0:8 inet static
 address 10.1.0.12
 netmask 255.255.255.0
-iface eth0:8 inet static
-address 10.1.0.13
-netmask 255.255.255.0
 iface eth0:9 inet static
-address 10.1.0.14
+address 10.1.0.13
 netmask 255.255.255.0
 EOF
 
