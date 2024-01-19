@@ -1,28 +1,7 @@
 #!/bin/bash
 
 #install gost
-wget https://github.com/go-gost/gost/releases/download/v3.0.0-nightly.20240118/gost_3.0.0-nightly.20240118_linux_amd64.tar.gz -O gost.tar.gz
-tar -vxf gost.tar.gz
-mv gost /usr/bin/
-cat>/usr/lib/systemd/system/gost.service<<EOF
-[Unit]
-Description=gost
-After=network-online.target
-Wants=network-online.target systemd-networkd-wait-online.service
-
-[Service]
-Type=simple
-User=root
-Restart=always
-RestartSec=5
-DynamicUser=true
-ExecStart=/usr/bin/gost -C /root/gost.json
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-cat>/root/gost.json<<EOF
+cat>/opt/gost.json<<EOF
 {
   "services": [
     {
@@ -117,10 +96,37 @@ cat>/root/gost.json<<EOF
 }
 EOF
 
+wget https://github.com/go-gost/gost/releases/download/v3.0.0-nightly.20240118/gost_3.0.0-nightly.20240118_linux_amd64.tar.gz -O gost.tar.gz
+tar -vxf gost.tar.gz
+mv gost /usr/bin/
+cat>/usr/lib/systemd/system/gost.service<<EOF
+[Unit]
+Description=gost
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Type=simple
+User=root
+Restart=always
+RestartSec=5
+DynamicUser=true
+ExecStart=/usr/bin/gost -C /opt/gost.json
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable gost.service
+
 #config iptables
 iptables -F
 iptables -I INPUT -p tcp --dport 3000:3010 -j DROP
-iptables-save
+iptables-save > /opt/iptables.save
+cat>/etc/network/if-pre-up.d/iptables<<EOF
+#!/bin/bash
+iptables-restore < /opt/iptables.save
+EOF
 
 #config network
 cat>>/etc/network/interfaces<<EOF
