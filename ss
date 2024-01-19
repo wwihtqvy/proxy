@@ -123,7 +123,7 @@ iptables -I INPUT -p tcp --dport 3000:3010 -j DROP
 iptables-save
 
 #config network
-cat>/etc/network/interfaces<<EOF
+cat>>/etc/network/interfaces<<EOF
 auto eth0:1 eth0:2 eth0:3 eth0:4 eth0:5 eth0:6 eth0:7 eth0:8 eth0:9
 iface eth0:1 inet static
 address 10.1.0.5
@@ -154,3 +154,4 @@ address 10.1.0.13
 netmask 255.255.255.0
 EOF
 
+reboot
