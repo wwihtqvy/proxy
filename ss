@@ -6,6 +6,7 @@ sudo -i
 #install gost
 wget https://github.com/go-gost/gost/releases/download/v3.0.0-nightly.20240118/gost_3.0.0-nightly.20240118_linux_amd64.tar.gz -O gost.tar.gz
 tar -vxf gost.tar.gz
+mv gost /usr/bin/
 cat>/usr/lib/systemd/system/gost.service<<EOF
 [Unit]
 Description=gost
