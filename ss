@@ -127,6 +127,7 @@ cat>/etc/network/if-pre-up.d/iptables<<EOF
 #!/bin/bash
 iptables-restore < /opt/iptables.save
 EOF
+chmod +x /etc/network/if-pre-up.d/iptables
 
 #config network
 cat>>/etc/network/interfaces<<EOF
