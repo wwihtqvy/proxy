@@ -1,0 +1,159 @@
+#!/bin/bash
+
+#install gost
+wget https://github.com/go-gost/gost/releases/download/v3.0.0-nightly.20240118/gost_3.0.0-nightly.20240118_linux_amd64.tar.gz -O gost.tar.gz
+tar -vxf gost.tar.gz
+cat>/usr/lib/systemd/system/gost.service<<EOF
+[Unit]
+Description=gost
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Type=simple
+User=root
+Restart=always
+RestartSec=5
+DynamicUser=true
+ExecStart=/usr/bin/gost -C /root/gost.json
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat>/root/gost.json<<EOF
+{
+  "services": [
+    {
+      "name": "service-0",
+      "addr": ":3000",
+      "interface": "10.1.0.4",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-1",
+      "addr": ":3001",
+      "interface": "10.1.0.5",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-2",
+      "addr": ":3002",
+      "interface": "10.1.0.6",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-3",
+      "addr": ":3003",
+      "interface": "10.1.0.7",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-4",
+      "addr": ":3004",
+      "interface": "10.1.0.8",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-5",
+      "addr": ":3005",
+      "interface": "10.1.0.9",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-6",
+      "addr": ":3006",
+      "interface": "10.1.0.10",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-7",
+      "addr": ":3007",
+      "interface": "10.1.0.11",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-8",
+      "addr": ":3008",
+      "interface": "10.1.0.12",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-9",
+      "addr": ":1025",
+      "interface": "10.1.0.13",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-10",
+      "addr": ":3009",
+      "interface": "10.1.0.14",
+      "handler": {
+        "type": "socks5"
+      }
+    }
+  ]
+}
+EOF
+
+#config iptables
+iptables -F
+iptables -I INPUT -p tcp --dport 3000:3010 -j DROP
+iptables-save
+
+#config network
+cat>/etc/network/interfaces<<EOF
+auto eth0: eth0:2 eth0:3 eth0:4 eth0:5 eth0:6 eth0:7 eth0:8 eth0:9
+iface eth0:1 inet static
+address 10.1.0.5
+netmask 255.255.255.0
+iface eth0:2 inet static
+address 10.1.0.6
+netmask 255.255.255.0
+iface eth0:3 inet static
+address 10.1.0.7
+netmask 255.255.255.0
+iface eth0:4 inet static
+address 10.1.0.8
+netmask 255.255.255.0
+iface eth0:5 inet static
+address 10.1.0.9
+netmask 255.255.255.0
+iface eth0:6 inet static
+address 10.1.0.10
+netmask 255.255.255.0
+iface eth0:7 inet static
+address 10.1.0.11
+netmask 255.255.255.0
+iface eth0:1 inet static
+address 10.1.0.12
+netmask 255.255.255.0
+iface eth0:8 inet static
+address 10.1.0.13
+netmask 255.255.255.0
+iface eth0:9 inet static
+address 10.1.0.14
+netmask 255.255.255.0
+EOF
+
+reboot
