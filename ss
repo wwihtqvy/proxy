@@ -154,4 +154,3 @@ address 10.1.0.13
 netmask 255.255.255.0
 EOF
 
-reboot
