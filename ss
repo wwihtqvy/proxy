@@ -161,4 +161,16 @@ address 10.1.0.13
 netmask 255.255.255.0
 EOF
 
+#iptables check
+cat>/usr/bin/ipc<<EOF
+#!/bin/bash
+
+cmd=$(echo $@ | sed -e 's/-A/-C/g')
+${cmd} >/dev/null 2>&1
+if [ $? -gt 0 ]; then
+    cmd=$@
+    ${cmd}
+fi
+EOF
+
 reboot
