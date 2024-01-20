@@ -172,5 +172,5 @@ if [ $? -gt 0 ]; then
     ${cmd}
 fi
 EOF
-
+chmod +x /usr/bin/ipc
 reboot
