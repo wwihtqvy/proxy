@@ -165,11 +165,11 @@ EOF
 cat>/usr/bin/ipc<<EOF
 #!/bin/bash
 
-cmd=$(echo $@ | sed -e 's/-A/-C/g')
+cmd=$(echo $@ | sed -e 's/-A/-C/g;s/-I/-C/g')
 ${cmd} >/dev/null 2>&1
 if [ $? -gt 0 ]; then
-    cmd=$@
-    ${cmd}
+    cc=$@
+    ${cc}
 fi
 EOF
 chmod +x /usr/bin/ipc
