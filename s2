@@ -1,0 +1,105 @@
+#!/bin/bash
+
+#install gost
+cat>/opt/gost.json<<EOF
+{
+  "services": [
+    {
+      "name": "service-0",
+      "addr": ":3000",
+      "interface": "10.1.0.4",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-1",
+      "addr": ":3001",
+      "interface": "10.1.0.5",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-2",
+      "addr": ":3002",
+      "interface": "10.1.0.6",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-3",
+      "addr": ":3003",
+      "interface": "10.1.0.7",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-4",
+      "addr": ":3004",
+      "interface": "10.1.0.8",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-5",
+      "addr": ":3005",
+      "interface": "10.1.0.9",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-6",
+      "addr": ":3006",
+      "interface": "10.1.0.10",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-7",
+      "addr": ":3007",
+      "interface": "10.1.0.11",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-8",
+      "addr": ":3008",
+      "interface": "10.1.0.12",
+      "handler": {
+        "type": "socks5"
+      }
+    },
+	{
+      "name": "service-9",
+      "addr": ":3009",
+      "interface": "10.1.0.13",
+      "handler": {
+        "type": "socks5"
+      }
+    }
+  ]
+}
+EOF
+
+#iptables check
+cat>/usr/bin/ipc<<EOF
+#!/bin/bash
+iptables -F
+iptables -I INPUT -p tcp --dport 3000:3010 -j DROP
+cmd=$(echo $@ | sed -e 's/-A/-C/g;s/-I/-C/g')
+${cmd} >/dev/null 2>&1
+if [ $? -gt 0 ]; then
+    cc=$@
+    ${cc}
+fi
+iptables-save > /opt/iptables.save
+EOF
+chmod +x /usr/bin/ipc
+reboot
