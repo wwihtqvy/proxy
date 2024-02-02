@@ -78,16 +78,8 @@ cat>/opt/gost.json<<EOF
     },
 	{
       "name": "service-9",
-      "addr": ":1025",
-      "interface": "10.1.0.13",
-      "handler": {
-        "type": "socks5"
-      }
-    },
-	{
-      "name": "service-10",
       "addr": ":3009",
-      "interface": "10.1.0.14",
+      "interface": "10.1.0.13",
       "handler": {
         "type": "socks5"
       }
@@ -164,6 +156,8 @@ EOF
 #iptables check
 cat>/usr/bin/ipc<<EOF
 #!/bin/bash
+iptables -F
+iptables -I INPUT -p tcp --dport 3000:3010 -j DROP
 
 cmd=$(echo $@ | sed -e 's/-A/-C/g;s/-I/-C/g')
 ${cmd} >/dev/null 2>&1
@@ -171,6 +165,8 @@ if [ $? -gt 0 ]; then
     cc=$@
     ${cc}
 fi
+
+iptables-save > /opt/iptables.save
 EOF
 chmod +x /usr/bin/ipc
 reboot
