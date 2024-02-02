@@ -89,7 +89,7 @@ cat>/opt/gost.json<<EOF
 EOF
 
 #iptables check
-cat>/usr/bin/ipc<<EOF
+cat>/usr/bin/ipc<<'EOF'
 #!/bin/bash
 iptables -F
 iptables -I INPUT -p tcp --dport 3000:3010 -j DROP
